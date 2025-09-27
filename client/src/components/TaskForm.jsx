@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 function TaskForm({ onAdded }) {
   const [title, setTitle] = useState("");
@@ -8,7 +8,7 @@ function TaskForm({ onAdded }) {
   const addTask = async () => {
     if (!title.trim()) return alert("Vui lòng nhập tiêu đề!");
 
-    await axios.post("http://localhost:5000/api/tasks", {
+    await api.post("/tasks", {
       title,
       dueDate,
       status: false,
@@ -16,7 +16,7 @@ function TaskForm({ onAdded }) {
 
     setTitle("");
     setDueDate("");
-    onAdded(); // callback để reload danh sách
+    onAdded(); // reload danh sách
   };
 
   return (

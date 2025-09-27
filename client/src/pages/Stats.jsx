@@ -4,8 +4,11 @@ import axios from "axios";
 function Stats() {
   const [stats, setStats] = useState({ completed: 0, pending: 0 });
 
+  const API_BASE = import.meta.env.VITE_API_BASE;
+
   useEffect(() => {
-    axios.get("http://localhost:5000/api/tasks/stats").then((res) => setStats(res.data));
+    axios.get(`${API_BASE}/tasks/stats`)
+        .then((res) => setStats(res.data));
   }, []);
 
   return (

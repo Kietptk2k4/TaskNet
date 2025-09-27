@@ -1,40 +1,38 @@
-// src/pages/Home.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TaskItem from "../components/TaskItem";
 import TaskForm from "../components/TaskForm";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 function Home() {
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ completed: 0, pending: 0 });
 
-  // Bộ lọc
-  const [status, setStatus] = useState(""); // "", "true", "false"
+  const [status, setStatus] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  // Phân trang
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
 
   // Load tasks
   const loadTasks = async () => {
     const queryObj = { page, limit: 5 };
-
     if (status !== "") queryObj.status = status;
     if (from) queryObj.from = from;
     if (to) queryObj.to = to;
 
     const query = new URLSearchParams(queryObj).toString();
 
-    const res = await axios.get(`http://localhost:5000/api/tasks?${query}`);
+    const res = await axios.get(`${API_BASE}/tasks?${query}`);
     setTasks(res.data.tasks || []);
     setPages(res.data.pages || 1);
   };
 
   // Load stats
   const loadStats = async () => {
-    const res = await axios.get("http://localhost:5000/api/tasks/stats");
+    const res = await axios.get(`${API_BASE}/tasks/stats`);
     setStats(res.data);
   };
 
@@ -45,16 +43,14 @@ function Home() {
 
   // Toggle trạng thái
   const toggleTask = async (id, current) => {
-    await axios.put(`http://localhost:5000/api/tasks/${id}`, {
-      status: !current,
-    });
+    await axios.put(`${API_BASE}/tasks/${id}`, { status: !current });
     loadTasks();
     loadStats();
   };
 
   // Xóa task
   const deleteTask = async (id) => {
-    await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+    await axios.delete(`${API_BASE}/tasks/${id}`);
     loadTasks();
     loadStats();
   };

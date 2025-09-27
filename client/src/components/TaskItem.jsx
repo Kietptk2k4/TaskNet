@@ -1,16 +1,7 @@
-import api from "../api";
+// src/components/TaskItem.jsx
+import React from "react";
 
-function TaskItem({ task, refresh }) {
-  const toggle = async () => {
-    await api.put(`/tasks/${task._id}`, { status: !task.status });
-    refresh();
-  };
-
-  const remove = async () => {
-    await api.delete(`/tasks/${task._id}`);
-    refresh();
-  };
-
+function TaskItem({ task, onToggle, onDelete }) {
   return (
     <li className="flex justify-between items-center bg-gray-50 px-4 py-2 rounded shadow">
       <span
@@ -25,10 +16,11 @@ function TaskItem({ task, refresh }) {
           </span>
         )}
       </span>
+
       <div className="flex gap-2">
         <button
-          onClick={toggle}
-          className={`px-3 py-1 text-sm rounded ${
+          onClick={() => onToggle(task._id, task.status)}
+          className={`px-3 py-1 text-sm font-semibold rounded-lg shadow transition ${
             task.status
               ? "bg-yellow-400 hover:bg-yellow-500 text-white"
               : "bg-blue-500 hover:bg-blue-600 text-white"
@@ -36,9 +28,10 @@ function TaskItem({ task, refresh }) {
         >
           {task.status ? "↩️ Hoàn tác" : "✅ Hoàn thành"}
         </button>
+
         <button
-          onClick={remove}
-          className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded"
+          onClick={() => onDelete(task._id)}
+          className="px-3 py-1 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition"
         >
           🗑️ Xoá
         </button>
